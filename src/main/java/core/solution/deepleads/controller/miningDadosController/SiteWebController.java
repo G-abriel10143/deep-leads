@@ -38,24 +38,36 @@ public class SiteWebController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @PostMapping("generate-leads-by-id")
-    public ResponseEntity<LeadsResponse> generateLeadsByUser(@RequestBody UrlRequest urlRequest, @RequestParam Long id) {
-        try {
+    @GetMapping("get-leads-by-id")
+    public ResponseEntity<ArrayList<LeadsModel>> getAllLeadsByUser (@RequestParam Long id) {
 
+        UsuarioModel usuarioModel  = usuarioRepository.findById(id).orElse(null);
+
+        ArrayList<LeadsModel> leadsModels = new ArrayList<>();
+        ArrayList<UrlModel> urlModels = new ArrayList<>();
+
+        for (UrlModel urlModel : usuarioModel.getUrlModels()) {
+            leadsModels.addAll(urlModel.getLeadsModels());
+
+        }
+        return ResponseEntity.ok(leadsModels);
+
+    }
+
+    @PostMapping("generate-leads-by-id")
+    public ResponseEntity<LeadsResponse> PostLeadsByUser(@RequestBody UrlRequest urlRequest, @RequestParam Long id) {
+        try {
             //          List<LeadsModel> leadsModelList = miningService.extractWebData(urlRequest);
             List<LeadsModel> leadsModelList = new ArrayList<>();
             List<UrlModel> urlModels = new ArrayList<>();
-
             UsuarioModel usuarioModel  = usuarioRepository.findById(id).orElse(null);
-
             if (usuarioModel != null) {
-
                 for (int i = 0; i < 5; i++) {
                     LeadsModel leadsModel = new LeadsModel();
                     leadsModel.setPlace("Sao paulo");
                     leadsModel.setStars("3,2");
                     leadsModel.setRating("250");
-                    leadsModel.setName("pastelaria " + i);
+                    leadsModel.setName("teste 23/08 " + i);
                     leadsModel.setPhone("11957818539");
                     leadsModelList.add(leadsModel);
                 }
@@ -63,17 +75,11 @@ public class SiteWebController {
                 UrlModel urlModel = new UrlModel(urlRequest, leadsModelList);
 
                 urlModels.add(urlModel);
-
                 List<UrlModel> urlsDoUsuario =  usuarioModel.getUrlModels();
-
                 urlsDoUsuario.addAll(urlModels);
-
                 usuarioModel.setUrlModels(urlsDoUsuario);
-
                 usuarioRepository.save(usuarioModel);
-
                 LeadsResponse leadsResponse = new LeadsResponse(urlModel);
-
                 return ResponseEntity.ok(leadsResponse);
 
             }

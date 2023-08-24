@@ -9,26 +9,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UsuarioService implements UserDetailsService  {
+public class UsuarioService  {
 
     @Autowired(required = false)
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public UsuarioModel save(UsuarioModel usuarioModel) {
-        usuarioModel.setSenha(passwordEncoder.encode(usuarioModel.getSenha()));
+//        usuarioModel.setSenha(passwordEncoder.encode(usuarioModel.getSenha()));
         return usuarioRepository.save(usuarioModel);
     }
 
@@ -60,24 +60,24 @@ public class UsuarioService implements UserDetailsService  {
     }
 
     public void updateUserByEmail(String email, UsuarioUpdateDto usuarioUpdate) {
-        usuarioUpdate.setSenha(passwordEncoder.encode(usuarioUpdate.getSenha()));
+//        usuarioUpdate.setSenha(passwordEncoder.encode(usuarioUpdate.getSenha()));
         usuarioRepository.updateUsuarioModelByEmail(email, usuarioUpdate);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        return null;
-//        UsuarioModel usuario = usuarioRepository.findByNomeOrEmail(usernameOrEmail, usernameOrEmail)
-//                .orElseThrow(() ->
-//                        new UsernameNotFoundException("User not found with username or email: "+ usernameOrEmail));
-//
-//        Set<GrantedAuthority> authorities = usuario
-//                .getRoles()
-//                .stream()
-//                .map((role) -> new SimpleGrantedAuthority(role.getNome())).collect(Collectors.toSet());
-//
-//        return new org.springframework.security.core.userdetails.User(usuario.getEmail(),
-//                usuario.getSenha(), authorities
-//                );
-    }
+//    @Override
+//    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+//        return null;
+////        UsuarioModel usuario = usuarioRepository.findByNomeOrEmail(usernameOrEmail, usernameOrEmail)
+////                .orElseThrow(() ->
+////                        new UsernameNotFoundException("User not found with username or email: "+ usernameOrEmail));
+////
+////        Set<GrantedAuthority> authorities = usuario
+////                .getRoles()
+////                .stream()
+////                .map((role) -> new SimpleGrantedAuthority(role.getNome())).collect(Collectors.toSet());
+////
+////        return new org.springframework.security.core.userdetails.User(usuario.getEmail(),
+////                usuario.getSenha(), authorities
+////                );
+//    }
 }
