@@ -5,6 +5,7 @@ import core.solution.deepleads.model.miningDadosModel.LeadsModel;
 import core.solution.deepleads.model.miningDadosModel.UrlModel;
 import core.solution.deepleads.repository.crudRepository.UsuarioRepository;
 import core.solution.deepleads.request.UrlRequest;
+import core.solution.deepleads.response.LeadsListResponse;
 import core.solution.deepleads.response.LeadsResponse;
 import core.solution.deepleads.service.miningDadosService.GenericEntityServiceImpl;
 import core.solution.deepleads.service.miningDadosService.MiningService;
@@ -39,18 +40,23 @@ public class SiteWebController {
     private UsuarioRepository usuarioRepository;
 
     @GetMapping("get-leads-by-id")
-    public ResponseEntity<ArrayList<LeadsModel>> getAllLeadsByUser (@RequestParam Long id) {
+    public ResponseEntity<ArrayList<LeadsListResponse>> getAllLeadsByUser (@RequestParam Long id) {
 
         UsuarioModel usuarioModel  = usuarioRepository.findById(id).orElse(null);
 
         ArrayList<LeadsModel> leadsModels = new ArrayList<>();
+        ArrayList<LeadsListResponse> leadsListResponses = new ArrayList<>();
         ArrayList<UrlModel> urlModels = new ArrayList<>();
 
         for (UrlModel urlModel : usuarioModel.getUrlModels()) {
             leadsModels.addAll(urlModel.getLeadsModels());
-
         }
-        return ResponseEntity.ok(leadsModels);
+        for (LeadsModel leadsModel : leadsModels) {
+            LeadsListResponse leadsListResponse = new LeadsListResponse(leadsModel);
+
+            leadsListResponses.add(leadsListResponse);
+        }
+        return ResponseEntity.ok(leadsListResponses);
 
     }
 

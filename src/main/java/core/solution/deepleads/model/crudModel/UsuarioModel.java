@@ -1,5 +1,6 @@
 package core.solution.deepleads.model.crudModel;
 
+import core.solution.deepleads.model.gptModel.GptModel;
 import core.solution.deepleads.model.miningDadosModel.UrlModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -46,6 +47,10 @@ public class UsuarioModel implements Serializable {
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "fk_user_id")
     private List<UrlModel> urlModels;
+
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "fk_user_id")
+    private List<GptModel> gptModels;
 
 
     @Override
