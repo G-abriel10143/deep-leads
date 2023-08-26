@@ -58,7 +58,6 @@ public class UsuarioAuthController {
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto) {
         try {
             if (usuarioService.loadUserByUsername(loginDto.getLogin())  != null ){
-
                 Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLogin(), loginDto.getSenha()));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 return new ResponseEntity<>("Usuario Autenticado com sucesso!!.", HttpStatus.OK);

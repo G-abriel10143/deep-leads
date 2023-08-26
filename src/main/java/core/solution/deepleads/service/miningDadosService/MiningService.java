@@ -9,6 +9,7 @@ import core.solution.deepleads.service.miningDadosService.googleMapsService.goog
 import core.solution.deepleads.service.miningDadosService.linkedinService.LinkedinAuth;
 import core.solution.deepleads.service.miningDadosService.linkedinService.LinkedinGetUrl;
 import core.solution.deepleads.service.miningDadosService.linkedinService.linkedinInterface.LinkedinUsersService;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -33,23 +34,25 @@ public class MiningService<T> {
 
     public static final String INSTAGRAM = "FACEBOOK";
 
+
     @Autowired
     LinkedinUsersService linkedinUsersService;
 
 
 
-    private String pageNext = "&page=";
+    private  String pageNext = "&page=";
 
 
-    public WebDriver getDriverChrome() {
 
-        System.setProperty("webdriver.chrome.driver", "src/drive/chromedriver1.exe");
 
-        ChromeOptions option = new ChromeOptions();
-        option.setBinary(chromeBinaryPath1);
-        option.addArguments("--remote-allow-origins=*");
 
-        WebDriver driver = new ChromeDriver(option);
+    public static  WebDriver getDriverChrome() {
+
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+
+
+        WebDriver driver = new ChromeDriver(options);
 
         return driver;
 
