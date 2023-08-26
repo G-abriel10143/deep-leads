@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Email;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity(name = "GS_USUARIO")
@@ -34,11 +35,11 @@ public class UsuarioModel implements Serializable {
     @Column(nullable = false, length = 255)
     private String senha;
 
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinTable(name = "usuarios_roles",
-//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-//    private Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "usuarios_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles;
 
 
     @OneToMany( cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -63,6 +64,22 @@ public class UsuarioModel implements Serializable {
                 ", email='" + email + '\'' +
                 ", senha='" + senha + '\'' +
                 '}';
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public List<GptModel> getGptModels() {
+        return gptModels;
+    }
+
+    public void setGptModels(List<GptModel> gptModels) {
+        this.gptModels = gptModels;
     }
 
     public List<UrlModel> getUrlModels() {

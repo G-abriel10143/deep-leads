@@ -39,7 +39,10 @@ public class SiteWebController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @GetMapping("get-leads-by-id")
+    @GetMapping("get/leads/by-id")
+    @Operation(summary = "retorna todos os leads do usuario", description = "Retorna uma lista com todos os usuarios em paginação")
+    @ApiResponse(responseCode = "200", description = "Usuarios encontrados com sucesso!", content = @Content(schema = @Schema(implementation = UrlModel.class)))
+    @ApiResponse(responseCode = "404", description = "Usuarios não encontrados!")
     public ResponseEntity<ArrayList<LeadsListResponse>> getAllLeadsByUser (@RequestParam Long id) {
 
         UsuarioModel usuarioModel  = usuarioRepository.findById(id).orElse(null);
@@ -53,33 +56,23 @@ public class SiteWebController {
         }
         for (LeadsModel leadsModel : leadsModels) {
             LeadsListResponse leadsListResponse = new LeadsListResponse(leadsModel);
-
             leadsListResponses.add(leadsListResponse);
         }
         return ResponseEntity.ok(leadsListResponses);
 
     }
-
-    @PostMapping("generate-leads-by-id")
+    @Operation(summary = "Realiza a Mineracao de dados persistindo diretamente na tabela de dados, ATENÇÃO: Não está atrlada a nenhum usuario.", description = "Retorna uma lista com todos os usuarios em paginação")
+    @ApiResponse(responseCode = "200", description = "Usuarios encontrados com sucesso!", content = @Content(schema = @Schema(implementation = UrlModel.class)))
+    @ApiResponse(responseCode = "404", description = "Usuarios não encontrados!")
+    @PostMapping("generate/leads/by-id")
     public ResponseEntity<LeadsResponse> PostLeadsByUser(@RequestBody UrlRequest urlRequest, @RequestParam Long id) {
         try {
-            //          List<LeadsModel> leadsModelList = miningService.extractWebData(urlRequest);
-            List<LeadsModel> leadsModelList = new ArrayList<>();
+            List<LeadsModel> leadsModelList = miningService.extractWebData(urlRequest);
             List<UrlModel> urlModels = new ArrayList<>();
             UsuarioModel usuarioModel  = usuarioRepository.findById(id).orElse(null);
             if (usuarioModel != null) {
-                for (int i = 0; i < 5; i++) {
-                    LeadsModel leadsModel = new LeadsModel();
-                    leadsModel.setPlace("Sao paulo");
-                    leadsModel.setStars("3,2");
-                    leadsModel.setRating("250");
-                    leadsModel.setName("teste 23/08 " + i);
-                    leadsModel.setPhone("11957818539");
-                    leadsModelList.add(leadsModel);
-                }
 
                 UrlModel urlModel = new UrlModel(urlRequest, leadsModelList);
-
                 urlModels.add(urlModel);
                 List<UrlModel> urlsDoUsuario =  usuarioModel.getUrlModels();
                 urlsDoUsuario.addAll(urlModels);
