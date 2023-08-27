@@ -3,60 +3,73 @@ package core.solution.deepleads.controller.gptController;
 import com.theokanning.openai.OpenAiService;
 import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.image.CreateImageRequest;
+import core.solution.deepleads.model.gptModel.GptModel;
+import core.solution.deepleads.model.miningDadosModel.UrlModel;
+import core.solution.deepleads.repository.miningDadosRepository.UrlModelRepository;
 import core.solution.deepleads.request.GptRequest;
+import core.solution.deepleads.request.UrlRequest;
 import core.solution.deepleads.response.GptResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Url;
 
+import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/generativeIa")
+@RequestMapping("/api/generative/ia")
 @Tag(name = "api de IA generativa", description = "Serviços responsaveis pela geração de campanhas inteligentes")
 public class GptController {
+    @Autowired
+    private GptService gptService;
+    @Autowired
+    private UrlModelRepository urlModelRepository;
 
-    private static final String API_KEY = "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";
-
-    OpenAiService openAiService = new OpenAiService(API_KEY);
 
     @Operation(summary = "Cria uma interação com o Chat GPT", description = "Interage com a API do chat GPT")
     @ApiResponse(responseCode = "200", description = "IA gerada com sucesso!!", content = @Content(schema = @Schema(implementation = GptResponse.class)))
     @ApiResponse(responseCode = "404", description = "Erro ao gerar mensagem")
     @GetMapping("/generate/ia/message")
-    public CompletionRequest generateIAMessage(@RequestBody GptRequest gptRequest) {
-//        GptResponse gptResponse = new GptResponse();
-//        CompletionRequest request = CompletionRequest.builder()
-//                .model("text-davinci-003").prompt(gptRequest.getMessage()).maxTokens(100)
-//                .build();
-//
-//        System.out.println(request);
+    public GptResponse generateIAMessage(@RequestBody GptRequest gptRequest) throws IOException {
+        GptResponse gptResponse = new GptResponse();
 
-        String token = System.getenv("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");
-        OpenAiService service = new OpenAiService(token, Duration.ofSeconds(30));
+        gptResponse = gptService.chatGptIntegration(gptRequest);
 
-        System.out.println("\nCreating completion...");
-        CompletionRequest completionRequest = CompletionRequest.builder()
-                .model("text-davinci-003")
-                .prompt("Somebody once told me the world is gonna roll me")
-                .echo(true)
-                .user("testing")
-                .n(3)
-                .build();
-        service.createCompletion(completionRequest).getChoices().forEach(System.out::println);
+        return gptResponse;
 
-        System.out.println("\nCreating Image...");
-        CreateImageRequest request = CreateImageRequest.builder()
-                .prompt("A cow breakdancing with a turtle")
-                .build();
-        return null;
+    }
+    @PostMapping("/post/campaigns/by-url-id")
+    public ResponseEntity<UrlModel> postCampaignByUrlModel(@RequestBody List<GptModel> urlRequest, @RequestParam Long id) {
+
+        UrlModel urlModel = urlModelRepository.findById(id).orElse(null);
+
+        if (urlModel != null) {
+            List<GptModel> gptModels = new ArrayList<>(urlModel.getGptModels());
+            gptModels.addAll(urlRequest);
+
+            urlModel.setGptModels(gptModels);
+
+            urlModelRepository.save(urlModel);
+            return ResponseEntity.ok(urlModel);
+        }
+        if (urlModel == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
 
     }
 
-
-
-
 }
+
+

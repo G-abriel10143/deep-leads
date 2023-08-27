@@ -42,6 +42,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>cn.gjsm</groupId>
+			<artifactId>openai</artifactId>
+			<version>0.1.4</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>32.1.2-jre</version>

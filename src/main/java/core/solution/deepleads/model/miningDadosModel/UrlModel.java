@@ -1,6 +1,7 @@
 package core.solution.deepleads.model.miningDadosModel;
 
 import core.solution.deepleads.TypeSearch.TypeSearch;
+import core.solution.deepleads.model.gptModel.GptModel;
 import core.solution.deepleads.request.UrlRequest;
 import jakarta.persistence.*;
 import lombok.NonNull;
@@ -33,6 +34,11 @@ public class UrlModel {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_url_model")
     private List<LeadsModel>  leadsModels;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_url_model")
+    private List<GptModel> gptModels;
+
+
 
     public UrlModel(UrlRequest urlRequest,  List<LeadsModel> leadsModels) {
         this.url = urlRequest.getUrl();
@@ -43,7 +49,13 @@ public class UrlModel {
 
     }
 
+    public List<GptModel> getGptModels() {
+        return gptModels;
+    }
 
+    public void setGptModels(List<GptModel> gptModels) {
+        this.gptModels = gptModels;
+    }
 
     public int getId() {
         return id;

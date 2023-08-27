@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Url;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,6 +39,14 @@ public class SiteWebController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @GetMapping("get/url/by-user")
+    public ResponseEntity<List<UrlModel>> getUrlModelByUser(@RequestParam Long id) {
+
+       List<UrlModel> urlModels = urlModelRepository.getUrlByUserId(id);
+
+       return ResponseEntity.ok(urlModels);
+    }
 
     @GetMapping("get/leads/by-id")
     @Operation(summary = "retorna todos os leads do usuario", description = "Retorna uma lista com todos os usuarios em paginação")
@@ -79,6 +88,7 @@ public class SiteWebController {
                 usuarioModel.setUrlModels(urlsDoUsuario);
                 usuarioRepository.save(usuarioModel);
                 LeadsResponse leadsResponse = new LeadsResponse(urlModel);
+
                 return ResponseEntity.ok(leadsResponse);
 
             }

@@ -6,6 +6,7 @@ import core.solution.deepleads.exception.CPFException;
 import core.solution.deepleads.model.crudModel.UsuarioModel;
 import core.solution.deepleads.repository.crudRepository.RoleRepository;
 import core.solution.deepleads.repository.crudRepository.UsuarioRepository;
+import core.solution.deepleads.response.UsuarioResponse;
 import core.solution.deepleads.service.crudService.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,7 +28,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/auth")
 @Tag(name = "Usuario autenticação", description = "API de autenticação de usuarios")
-public class UsuarioAuthController {
+public class UsuarioAuthController<T> {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -55,16 +56,20 @@ public class UsuarioAuthController {
     @ApiResponse(responseCode = "200", description = "Usuario Autenticado com sucesso!", content = @Content(schema = @Schema(implementation = UsuarioModel.class)))
     @ApiResponse(responseCode = "404", description = "Senha invalida!")
     @PostMapping("/signin")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<T> authenticateUser(@RequestBody LoginDto loginDto) {
         try {
+            UsuarioModel usuarioModel = usuarioRepository.findByEmail(loginDto.getLogin()).orElse(null);
             if (usuarioService.loadUserByUsername(loginDto.getLogin())  != null ){
+
                 Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLogin(), loginDto.getSenha()));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                return new ResponseEntity<>("Usuario Autenticado com sucesso!!.", HttpStatus.OK);
+
+                UsuarioResponse usuarioResponse = new UsuarioResponse(usuarioModel, "Usuario Autenticado com sucesso!!." );
+                return new ResponseEntity<T>((T)usuarioResponse, HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<T>((T) e.getMessage(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
 

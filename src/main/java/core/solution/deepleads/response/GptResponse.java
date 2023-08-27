@@ -1,6 +1,7 @@
 package core.solution.deepleads.response;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class GptResponse {
 
@@ -8,7 +9,7 @@ public class GptResponse {
 
     private String response;
 
-    private LocalDate timeResponse;
+    private LocalDateTime timeResponse;
 
     public String getMessage() {
         return message;
@@ -26,11 +27,11 @@ public class GptResponse {
         this.response = response;
     }
 
-    public LocalDate getTimeResponse() {
+    public LocalDateTime getTimeResponse() {
         return timeResponse;
     }
 
-    public void setTimeResponse(LocalDate timeResponse) {
+    public void setTimeResponse(LocalDateTime timeResponse) {
         this.timeResponse = timeResponse;
     }
 }

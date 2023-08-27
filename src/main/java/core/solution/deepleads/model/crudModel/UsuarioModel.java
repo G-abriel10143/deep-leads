@@ -49,10 +49,6 @@ public class UsuarioModel implements Serializable {
     @JoinColumn(name = "fk_user_id")
     private List<UrlModel> urlModels;
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "fk_user_id")
-    private List<GptModel> gptModels;
-
 
     @Override
     public String toString() {
@@ -74,13 +70,7 @@ public class UsuarioModel implements Serializable {
         this.roles = roles;
     }
 
-    public List<GptModel> getGptModels() {
-        return gptModels;
-    }
 
-    public void setGptModels(List<GptModel> gptModels) {
-        this.gptModels = gptModels;
-    }
 
     public List<UrlModel> getUrlModels() {
         return urlModels;
