@@ -7,6 +7,8 @@ import core.solution.deepleads.repository.crudRepository.UsuarioRepository;
 import core.solution.deepleads.request.UrlRequest;
 import core.solution.deepleads.response.LeadsListResponse;
 import core.solution.deepleads.response.LeadsResponse;
+import core.solution.deepleads.response.googleMapsResponse.GeocodingResponse;
+import core.solution.deepleads.service.crudService.GoogleMapsService;
 import core.solution.deepleads.service.miningDadosService.GenericEntityServiceImpl;
 import core.solution.deepleads.service.miningDadosService.MiningService;
 import core.solution.deepleads.service.miningDadosService.UrlServiceImpl;
@@ -16,10 +18,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import retrofit2.http.Url;
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,47 +46,95 @@ public class SiteWebController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private GoogleMapsService googleMapsService;
+
+
     @GetMapping("get/url/by-user")
-    public ResponseEntity<List<UrlModel>> getUrlModelByUser(@RequestParam Long id) {
+    public ResponseEntity<Page<UrlModel>> getUrlModelByUser(
+            @RequestParam Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        UsuarioModel usuarioModel = usuarioRepository.findById(id).orElse(null);
 
-       List<UrlModel> urlModels = urlModelRepository.getUrlByUserId(id);
+        if (usuarioModel == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-       return ResponseEntity.ok(urlModels);
+        List<UrlModel> allUrlModels = usuarioModel.getUrlModels();
+
+        int start = page * size;
+        int end = Math.min(start + size, allUrlModels.size());
+
+        List<UrlModel> urlModels = allUrlModels.subList(start, end);
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UrlModel> pageUrlModels = new PageImpl<>(urlModels, pageable, allUrlModels.size());
+
+        return ResponseEntity.ok(pageUrlModels);
     }
 
+
+
     @GetMapping("get/leads/by-id")
-    @Operation(summary = "retorna todos os leads do usuario", description = "Retorna uma lista com todos os usuarios em paginação")
-    @ApiResponse(responseCode = "200", description = "Usuarios encontrados com sucesso!", content = @Content(schema = @Schema(implementation = UrlModel.class)))
-    @ApiResponse(responseCode = "404", description = "Usuarios não encontrados!")
-    public ResponseEntity<ArrayList<LeadsListResponse>> getAllLeadsByUser (@RequestParam Long id) {
+    public ResponseEntity<Page<LeadsListResponse>> getAllLeadsByUser(
+            @RequestParam Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        UsuarioModel usuarioModel = usuarioRepository.findById(id).orElse(null);
 
-        UsuarioModel usuarioModel  = usuarioRepository.findById(id).orElse(null);
+        if (usuarioModel == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-        ArrayList<LeadsModel> leadsModels = new ArrayList<>();
-        ArrayList<LeadsListResponse> leadsListResponses = new ArrayList<>();
-        ArrayList<UrlModel> urlModels = new ArrayList<>();
-
+        List<LeadsModel> leadsModels = new ArrayList<>();
         for (UrlModel urlModel : usuarioModel.getUrlModels()) {
             leadsModels.addAll(urlModel.getLeadsModels());
         }
-        for (LeadsModel leadsModel : leadsModels) {
+
+        int start = page * size;
+        int end = Math.min(start + size, leadsModels.size());
+
+        List<LeadsListResponse> leadsListResponses = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            LeadsModel leadsModel = leadsModels.get(i);
             LeadsListResponse leadsListResponse = new LeadsListResponse(leadsModel);
             leadsListResponses.add(leadsListResponse);
         }
-        return ResponseEntity.ok(leadsListResponses);
 
+        Pageable pageable = PageRequest.of(page, size);
+        Page<LeadsListResponse> pageLeadsListResponses = new PageImpl<>(leadsListResponses, pageable, leadsModels.size());
+
+        return ResponseEntity.ok(pageLeadsListResponses);
     }
+
     @Operation(summary = "Realiza a Mineracao de dados persistindo diretamente na tabela de dados, ATENÇÃO: Não está atrlada a nenhum usuario.", description = "Retorna uma lista com todos os usuarios em paginação")
-    @ApiResponse(responseCode = "200", description = "Usuarios encontrados com sucesso!", content = @Content(schema = @Schema(implementation = UrlModel.class)))
+    @ApiResponse(responseCode = "200", description = "Usuarios encontrados com sucesso!", content = @Content(schema = @Schema(implementation = UrlRequest.class)))
     @ApiResponse(responseCode = "404", description = "Usuarios não encontrados!")
     @PostMapping("generate/leads/by-id")
     public ResponseEntity<LeadsResponse> PostLeadsByUser(@RequestBody UrlRequest urlRequest, @RequestParam Long id) {
         try {
-            List<LeadsModel> leadsModelList = miningService.extractWebData(urlRequest);
             List<UrlModel> urlModels = new ArrayList<>();
+            List<LeadsModel> leadsModelList = miningService.extractWebData(urlRequest);
             UsuarioModel usuarioModel  = usuarioRepository.findById(id).orElse(null);
-            if (usuarioModel != null) {
 
+
+            for (LeadsModel leadsModel: leadsModelList ) {
+                GeocodingResponse geocodingResponse =googleMapsService.getInfosAdress(leadsModel.getPlusCode());
+
+                double latitude = geocodingResponse.getResults().get(0).getGeometry().getLocation().getLat();
+                double logitude = geocodingResponse.getResults().get(0).getGeometry().getLocation().getLng();
+
+
+
+                leadsModel.setLatitude(String.valueOf(latitude));
+                leadsModel.setLongitude(String.valueOf(logitude));
+
+            }
+
+            if (usuarioModel != null) {
                 UrlModel urlModel = new UrlModel(urlRequest, leadsModelList);
                 urlModels.add(urlModel);
                 List<UrlModel> urlsDoUsuario =  usuarioModel.getUrlModels();
@@ -100,7 +154,7 @@ public class SiteWebController {
     }
 
     @Operation(summary = "Realiza a Mineracao de dados persistindo diretamente na tabela de dados, ATENÇÃO: Não está atrlada a nenhum usuario.", description = "Retorna uma lista com todos os usuarios em paginação")
-    @ApiResponse(responseCode = "200", description = "Usuarios encontrados com sucesso!", content = @Content(schema = @Schema(implementation = UrlModel.class)))
+    @ApiResponse(responseCode = "200", description = "Usuarios encontrados com sucesso!", content = @Content(schema = @Schema(implementation = UrlRequest.class)))
     @ApiResponse(responseCode = "404", description = "Usuarios não encontrados!")
     @PostMapping("/getDatas")
     public ResponseEntity<LeadsResponse> siteUrl(@RequestBody UrlRequest urlRequest) {

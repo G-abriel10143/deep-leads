@@ -23,6 +23,42 @@ public class LeadsModel {
     private String name; // LINKEDIN, MAPS
     private String phone; //LINKEDIN, MAPS
     private String place; //LINKEDIN, MAPS
+    private String country;
+    private String state;
+    private String latitude;
+    private String longitude;
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
 
     public Long getId() {
         return id;

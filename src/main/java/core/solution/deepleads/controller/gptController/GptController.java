@@ -36,7 +36,7 @@ public class GptController {
 
 
     @Operation(summary = "Cria uma interação com o Chat GPT", description = "Interage com a API do chat GPT")
-    @ApiResponse(responseCode = "200", description = "IA gerada com sucesso!!", content = @Content(schema = @Schema(implementation = GptResponse.class)))
+    @ApiResponse(responseCode = "200", description = "IA gerada com sucesso!!", content = @Content(schema = @Schema(implementation = GptRequest.class)))
     @ApiResponse(responseCode = "404", description = "Erro ao gerar mensagem")
     @GetMapping("/generate/ia/message")
     public GptResponse generateIAMessage(@RequestBody GptRequest gptRequest) throws IOException {
@@ -47,6 +47,9 @@ public class GptController {
         return gptResponse;
 
     }
+    @Operation(summary = "Cria uma interação com o Chat GPT", description = "Interage com a API do chat GPT")
+    @ApiResponse(responseCode = "200", description = "IA gerada com sucesso!!", content = @Content(schema = @Schema(implementation = GptRequest.class)))
+    @ApiResponse(responseCode = "404", description = "Erro ao gerar mensagem")
     @PostMapping("/post/campaigns/by-url-id")
     public ResponseEntity<UrlModel> postCampaignByUrlModel(@RequestBody List<GptModel> urlRequest, @RequestParam Long id) {
 

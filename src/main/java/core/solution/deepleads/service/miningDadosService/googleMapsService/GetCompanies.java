@@ -3,6 +3,8 @@ package core.solution.deepleads.service.miningDadosService.googleMapsService;
 
 import core.solution.deepleads.model.miningDadosModel.LeadsModel;
 import core.solution.deepleads.repository.miningDadosRepository.GenericEntityRepository;
+import core.solution.deepleads.response.googleMapsResponse.GeocodingResponse;
+import core.solution.deepleads.service.crudService.GoogleMapsService;
 import core.solution.deepleads.service.miningDadosService.googleMapsService.googleMapsInterface.GoogleMapsCompaniesService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -11,15 +13,20 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+@Service
 public class GetCompanies implements GoogleMapsCompaniesService {
+
 
     @Autowired
     private GenericEntityRepository genericEntityRepository;
+
+
 
     private String telefone;
 
@@ -33,14 +40,16 @@ public class GetCompanies implements GoogleMapsCompaniesService {
 
     private String pluscode;
 
-    private  String categoria;
+    private String categoria;
 
     private String urlCompany;
+
+
 
     @Override
     public String toString() {
         return "Nome empresa: " + nome
-                + "\nNº Avaliações: "+ avaliacoes
+                + "\nNº Avaliações: " + avaliacoes
                 + "\nEstrelas: " + estrelas
                 + "\nendereco: " + endereco
                 + "\nTelefone: " + telefone
@@ -52,7 +61,7 @@ public class GetCompanies implements GoogleMapsCompaniesService {
     public List<WebElement> scrollPageAndExtractCompany(WebDriver driver) {
 
         try {
-            int i =0;
+            int i = 0;
             List<WebElement> finalList = new ArrayList<>();
             List<WebElement> cardsEmpresa = driver.findElements(By.xpath("//a[@class='hfpxzc']"));
             while (finalList.isEmpty()) {
@@ -69,7 +78,7 @@ public class GetCompanies implements GoogleMapsCompaniesService {
 
                     if (!finalList.isEmpty()) {
                         System.out.println("========================================================================= ");
-                        System.out.println("VOCE CHEGOU AO FIM DA MINERACAOD ESTA PAGINA! \nNR DE EMPRESAS: " + cardsEmpresa.size() );
+                        System.out.println("VOCE CHEGOU AO FIM DA MINERACAOD ESTA PAGINA! \nNR DE EMPRESAS: " + cardsEmpresa.size());
                         System.out.println("==========================================================================");
                         return cardsEmpresa;
                     }
@@ -97,45 +106,49 @@ public class GetCompanies implements GoogleMapsCompaniesService {
             actions.moveToElement(cardEmpresa).click().perform();
 
 
-                Thread.sleep(3000);
+            Thread.sleep(3000);
 
-                List<WebElement> nomeElement  =driver.findElements(By.xpath("//div[@class='lMbq3e']/div/h1"));
-                nome = (!nomeElement.isEmpty()) ? nomeElement.get(0).getText() : null;
+            List<WebElement> nomeElement = driver.findElements(By.xpath("//div[@class='lMbq3e']/div/h1"));
+            nome = (!nomeElement.isEmpty()) ? nomeElement.get(0).getText() : null;
 
-                List<WebElement> avaliacoesElement = driver.findElements(By.xpath("//div[@class='F7nice ']/span[2]/span/span"));
-                avaliacoes = (!avaliacoesElement.isEmpty()) ? avaliacoesElement.get(0).getText().replaceAll("\\D", "") : null;
+            List<WebElement> avaliacoesElement = driver.findElements(By.xpath("//div[@class='F7nice ']/span[2]/span/span"));
+            avaliacoes = (!avaliacoesElement.isEmpty()) ? avaliacoesElement.get(0).getText().replaceAll("\\D", "") : null;
 
 
-                List<WebElement> estrelasElement = driver.findElements(By.xpath("//span[@class='ceNzKf']"));
-                estrelas = (!estrelasElement.isEmpty()) ? estrelasElement.get(0).getAttribute("aria-label") : null;
+            List<WebElement> estrelasElement = driver.findElements(By.xpath("//span[@class='ceNzKf']"));
+            estrelas = (!estrelasElement.isEmpty()) ? estrelasElement.get(0).getAttribute("aria-label") : null;
 
-                List<WebElement> enderecoElement =  driver.findElements(By.xpath("//button[@data-item-id='address']/div[1]/div[2]/div"));
-                endereco = (!enderecoElement.isEmpty()) ? enderecoElement.get(0).getText() : null;
+            List<WebElement> enderecoElement = driver.findElements(By.xpath("//button[@data-item-id='address']/div[1]/div[2]/div"));
+            endereco = (!enderecoElement.isEmpty()) ? enderecoElement.get(0).getText() : null;
 
-                List<WebElement> pluscodeElement =  driver.findElements(By.xpath("//button[@data-tooltip='Copiar Plus Code']"));
-                pluscode = (!pluscodeElement.isEmpty()) ? pluscodeElement.get(0).getText() : null;
+            List<WebElement> pluscodeElement = driver.findElements(By.xpath("//button[@data-tooltip='Copiar Plus Code']"));
+            pluscode = (!pluscodeElement.isEmpty()) ? pluscodeElement.get(0).getText() : null;
 
-                List<WebElement> telefoneElement =  driver.findElements(By.xpath("//button[contains(@aria-label, 'Telefone')]"));
-                telefone = (!telefoneElement.isEmpty()) ? telefoneElement.get(0).getAttribute("aria-label").replaceAll("\\D", "") : null;
+            List<WebElement> telefoneElement = driver.findElements(By.xpath("//button[contains(@aria-label, 'Telefone')]"));
+            telefone = (!telefoneElement.isEmpty()) ? telefoneElement.get(0).getAttribute("aria-label").replaceAll("\\D", "") : null;
 
-                List<WebElement> categoriaElement =  driver.findElements(By.xpath("//button[@jsaction='pane.rating.category']"));
-                categoria = (!categoriaElement.isEmpty()) ? categoriaElement.get(0).getText() : null;
+            List<WebElement> categoriaElement = driver.findElements(By.xpath("//button[@jsaction='pane.rating.category']"));
+            categoria = (!categoriaElement.isEmpty()) ? categoriaElement.get(0).getText() : null;
 
-                urlCompany =  driver.getCurrentUrl();
+            urlCompany = driver.getCurrentUrl();
 
-                System.out.println(toString());
+            System.out.println(toString());
 //                System.out.println("Nome empresa: " + nome + "\nNº Avaliações: " + avaliacoes + "\nEstrelas: " + estrelas + "\nendereco: " + endereco + "\nTelefone: " + telefone + "\nPlusCode: " + pluscode + "\nLink empresa: " + urlCompany);
 //                System.out.println("==============================================================================================================================================");
 
 
-            if (telefone != null || nome != null || endereco != null) {
+            if (!pluscodeElement.isEmpty()) {
+                GeocodingResponse geocodingResponse = new GeocodingResponse();
+
                 LeadsModel leadsModel = new LeadsModel();
+
                 leadsModel.setCategory(categoria);
                 leadsModel.setPhone(telefone);
                 leadsModel.setName(nome);
                 leadsModel.setPlace(endereco);
                 leadsModel.setStars(estrelas);
                 leadsModel.setPlusCode(pluscode);
+
 //                genericEntity.setLinkProfile(urlCompany);
                 leadsModel.setRating(avaliacoes);
                 leadsModelList.add(leadsModel);
@@ -146,12 +159,7 @@ public class GetCompanies implements GoogleMapsCompaniesService {
         return leadsModelList;
     }
 
-    //TODO: Analisar necessidade de filtragem das empresas, verificar a relevancia de excluir informacoes
-    public List<LeadsModel> filterCompanies(List<LeadsModel> companiesList) {
-        for (LeadsModel companie : companiesList) {
-        }
-        return null;
-    }
+
 
 
 

@@ -32,7 +32,6 @@ public class GptService {
 
         OpenAiClient openAiClient = OpenAiClientFactory.createClient(token);
 
-        //Instance the message, setting the role as a user and passing the user query.
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setRole("user");
         chatMessage.setContent(gptRequest.getMessage());

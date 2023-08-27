@@ -3,6 +3,7 @@ package core.solution.deepleads.service.miningDadosService;
 
 import core.solution.deepleads.model.miningDadosModel.LeadsModel;
 import core.solution.deepleads.request.UrlRequest;
+import core.solution.deepleads.service.crudService.GoogleMapsService;
 import core.solution.deepleads.service.miningDadosService.googleMapsService.GetCompanies;
 import core.solution.deepleads.service.miningDadosService.googleMapsService.MapsUrlCompanies;
 import core.solution.deepleads.service.miningDadosService.googleMapsService.googleMapsInterface.GoogleMapsCompaniesService;
@@ -10,6 +11,7 @@ import core.solution.deepleads.service.miningDadosService.linkedinService.Linked
 import core.solution.deepleads.service.miningDadosService.linkedinService.LinkedinGetUrl;
 import core.solution.deepleads.service.miningDadosService.linkedinService.linkedinInterface.LinkedinUsersService;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.checkerframework.checker.units.qual.A;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -33,6 +35,9 @@ public class MiningService<T> {
     public static final String MAPSGOOGLE = "FACEBOOK";
 
     public static final String INSTAGRAM = "FACEBOOK";
+
+    @Autowired
+    GoogleMapsService googleMapsService;
 
 
     @Autowired

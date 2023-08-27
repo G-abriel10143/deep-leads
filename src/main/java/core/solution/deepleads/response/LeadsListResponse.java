@@ -7,14 +7,19 @@ import lombok.Data;
 
 public class LeadsListResponse {
 
-    private Long id;
-    private String rating;
-    private String stars;
-    private String category;
-    private String plusCode;
-    private String name;
-    private String phone;
-    private String place;
+        private Long id;
+        private String rating;
+        private String stars;
+        private String category;
+        private String plusCode;
+        private String name;
+        private String phone;
+        private String place;
+        private String latitude;
+        private String longitude;
+        private String state;
+        private String country;
+
 
     public LeadsListResponse(LeadsModel leadsModel) {
         this.id = leadsModel.getId();
@@ -25,6 +30,42 @@ public class LeadsListResponse {
         this.name = leadsModel.getName();
         this.phone = leadsModel.getPhone();
         this.place = leadsModel.getPlace();
+        this.latitude = leadsModel.getLatitude();
+        this.longitude= leadsModel.getLongitude();
+        this.state = leadsModel.getState();
+        this.country = leadsModel.getCountry();
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public Long getId() {
