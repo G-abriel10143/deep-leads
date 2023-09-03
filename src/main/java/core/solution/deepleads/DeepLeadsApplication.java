@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @ImportAutoConfiguration({FeignAutoConfiguration.class})
 public class DeepLeadsApplication {
 
-	@GetMapping
-	public String appAlive() {
-		return "Parabéns, a aplicação está no ar!";
-	}
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(DeepLeadsApplication.class, args);
