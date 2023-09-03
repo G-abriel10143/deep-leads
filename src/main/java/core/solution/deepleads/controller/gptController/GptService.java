@@ -24,20 +24,21 @@ import java.util.Arrays;
 @Service
 public class GptService {
 
-    public GptResponse chatGptIntegration(GptRequest gptRequest) throws IOException {
+    public GptResponse chatGptIntegration(String message, String apiKey) throws IOException {
 
         GptResponse gptResponse = new GptResponse();
 
-        String token = gptRequest.getApiKey();
+        String token = apiKey;
 
         OpenAiClient openAiClient = OpenAiClientFactory.createClient(token);
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setRole("user");
-        chatMessage.setContent(gptRequest.getMessage());
+        chatMessage.setContent(message);
 
         ChatCompletionRequest request = ChatCompletionRequest.builder()
                 .messages(Arrays.asList(chatMessage))
+                .maxTokens(100)
                 .model("gpt-3.5-turbo")
                 .build();
 
@@ -56,7 +57,7 @@ public class GptService {
 
             LocalDateTime  localDate = LocalDateTime.now();
             gptResponse.setResponse(msgJsonNode.get("content").asText());
-            gptResponse.setMessage(gptRequest.getMessage());
+            gptResponse.setMessage(message);
             gptResponse.setTimeResponse(localDate);
 
             return gptResponse;

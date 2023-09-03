@@ -39,10 +39,10 @@ public class GptController {
     @ApiResponse(responseCode = "200", description = "IA gerada com sucesso!!", content = @Content(schema = @Schema(implementation = GptRequest.class)))
     @ApiResponse(responseCode = "404", description = "Erro ao gerar mensagem")
     @GetMapping("/generate/ia/message")
-    public GptResponse generateIAMessage(@RequestBody GptRequest gptRequest) throws IOException {
+    public GptResponse generateIAMessage(@RequestParam String message,@RequestParam String apiKey ) throws IOException {
         GptResponse gptResponse = new GptResponse();
 
-        gptResponse = gptService.chatGptIntegration(gptRequest);
+        gptResponse = gptService.chatGptIntegration(message, apiKey);
 
         return gptResponse;
 
