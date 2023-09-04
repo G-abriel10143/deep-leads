@@ -1,0 +1,531 @@
+{
+	"info": {
+		"_postman_id": "0d4a76f0-5cac-415d-b815-4766c3ee0f29",
+		"name": "Mining-dados-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22009911"
+	},
+	"item": [
+		{
+			"name": "CHAT GPT - AMBIENTE",
+			"item": [
+				{
+					"name": "CHAT GPT",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{OPENAI_API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"model\": \"gpt-3.5-turbo\",\r\n    \"messages\": [\r\n        {\r\n            \"role\": \"user\",\r\n            \"content\": \"ME EXPLIQUE COMO SURGIU O MUNDO\"\r\n        }\r\n    ],\r\n    \"temperature\": 0.7\r\n}"
+						},
+						"url": {
+							"raw": "https://api.openai.com/v1/chat/completions",
+							"protocol": "https",
+							"host": [
+								"api",
+								"openai",
+								"com"
+							],
+							"path": [
+								"v1",
+								"chat",
+								"completions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Chat GPT - Integração",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{UrlBase}}/api/generative/ia/generate/ia/message?message=ola, como está o clima em sao paulo?&apiKey=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",
+							"host": [
+								"{{UrlBase}}"
+							],
+							"path": [
+								"api",
+								"generative",
+								"ia",
+								"generate",
+								"ia",
+								"message"
+							],
+							"query": [
+								{
+									"key": "message",
+									"value": "ola, como está o clima em sao paulo?"
+								},
+								{
+									"key": "apiKey",
+									"value": "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"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Chat GPT - Cadastrar Campanha",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"id\": 1,\r\n        \"message\": \"gere uma campanha para uma OFICINA DE MOTO DE NO MAXIMO 20 PALAVRAS\",\r\n        \"response\": \"\\\"Conheça nossa oficina: qualidade, rapidez e segurança para sua moto!\\\"\",\r\n        \"timeResponse\": \"2023-08-26T20:34:07.9722512\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/generative/ia/post/campaigns/by-url-id?id=1952",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"generative",
+								"ia",
+								"post",
+								"campaigns",
+								"by-url-id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1952"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GOOGLE MAPS - AMBIENTE",
+			"item": [
+				{
+					"name": "Buscar - Informacoes ENDERECO",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://maps.googleapis.com/maps/api/geocode/json?address=57G8+35 Parelheiros, São Paulo - SP&key={{MAPS_KEY}}",
+							"protocol": "https",
+							"host": [
+								"maps",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"maps",
+								"api",
+								"geocode",
+								"json"
+							],
+							"query": [
+								{
+									"key": "address",
+									"value": "57G8+35 Parelheiros, São Paulo - SP"
+								},
+								{
+									"key": "key",
+									"value": "{{MAPS_KEY}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar - Informacoes ENDERECO Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{UrlBase}}/api/google/maps/andress?param=04815260",
+							"host": [
+								"{{UrlBase}}"
+							],
+							"path": [
+								"api",
+								"google",
+								"maps",
+								"andress"
+							],
+							"query": [
+								{
+									"key": "param",
+									"value": "04815260"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Autenticação de Login e Cadastro",
+			"item": [
+				{
+					"name": "Cadastro",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "babec2d7-0b90-4fec-abf6-643843f58fce",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"jhonatas\",\r\n    \"telefone\": \"23423442023\",\r\n    \"cpf\": \"51753147304\",\r\n    \"email\": \"jonatas32004@gmail.com\",\r\n    \"senha\": \"26042004\",\r\n    \"endereco\": [\r\n        {\r\n            \"cep\": \"04815-260\",\r\n            \"logradouro\": \"Rua Herbert Frazer\",\r\n            \"bairro\": \"Interlagos\",\r\n            \"localidade\": \"São Paulo\",\r\n            \"uf\": \"SP\"\r\n        }\r\n    ]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{UrlBase}}/api/auth/signup",
+							"host": [
+								"{{UrlBase}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FazerLogin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\": \"jonatas2004@gmail.com\",\r\n    \"senha\": \"21042004\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{UrlBase}}/api/auth/signin",
+							"host": [
+								"{{UrlBase}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "buscarCadastros",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{UrlBase}}/api/usuario/buscarUsuarios",
+							"host": [
+								"{{UrlBase}}"
+							],
+							"path": [
+								"api",
+								"usuario",
+								"buscarUsuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"jonatas2004@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuario/deletar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuario",
+								"deletar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Usuario",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"jhonatas oliveira\",\r\n    \"telefone\": \"42342345\",\r\n    \"cpf\": \"657575788\",\r\n    \"senha\": \"jhonatas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuario/atualizar/brenojulio87@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuario",
+								"atualizar",
+								"brenojulio87@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listagem Paginada",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"jhonatas oliveira\",\r\n    \"telefone\": \"42342345\",\r\n    \"cpf\": \"657575788\",\r\n    \"senha\": \"jhonatas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuario/1/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuario",
+								"1",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mineração de dados Google Maps",
+			"item": [
+				{
+					"name": "Mineração Google Maps By User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\": \"https://www.google.com.br/maps\",\r\n    \"typeSearch\": \"MAPSGOOGLE\",\r\n    \"keys\": \"mecanica moema\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{UrlBase}}/api/mineracao/generate/leads/by-id?id=3",
+							"host": [
+								"{{UrlBase}}"
+							],
+							"path": [
+								"api",
+								"mineracao",
+								"generate",
+								"leads",
+								"by-id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "URL MODEL BY USER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{UrlBase}}/api/mineracao/get/url/by-user?id=1",
+							"host": [
+								"{{UrlBase}}"
+							],
+							"path": [
+								"api",
+								"mineracao",
+								"get",
+								"url",
+								"by-user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "3",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET LEADS BY USER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{UrlBase}}/api/mineracao/get/leads/by-id?id=3&page=1",
+							"host": [
+								"{{UrlBase}}"
+							],
+							"path": [
+								"api",
+								"mineracao",
+								"get",
+								"leads",
+								"by-id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "4",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "OPENAI_API_KEY",
+			"value": "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"
+		},
+		{
+			"key": "MAPS_KEY",
+			"value": "AIzaSyDAkXd3lIMPrXI2Yrmx5HHlZLzWSAe2z0k"
+		}
+	]
+}
