@@ -24,6 +24,12 @@ Antes de começar a utilizar nossos serviços, certifique-se de atender aos segu
 - **IDE IntelliJ:** Recomendamos o uso do IntelliJ como ambiente de desenvolvimento.
 - **Google Chrome:** Para obter a melhor experiência de usuário em nossa plataforma, utilize o Google Chrome como seu navegador padrão.
 
+## Documentação com Swagger
+
+Para acessar a documentação completa da nossa API, utilize o Swagger. A documentação inclui informações detalhadas sobre os endpoints, parâmetros e exemplos de uso.
+
+- **Documentação Swagger:** Suba a aplicação no LocalHost e coloque: /swagger-ui.html
+
 ## Como Começar
 
 Siga estas etapas simples para começar a utilizar o DeepLeads:
