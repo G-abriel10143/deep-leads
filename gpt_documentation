@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: API de IA Generativa
+  description: API para geração de campanhas inteligentes com IA generativa
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/generative/ia
+tags:
+  - name: IA Generativa
+    description: Serviços responsáveis pela geração de campanhas inteligentes
+paths:
+  /generate/ia/message:
+    get:
+      tags:
+        - IA Generativa
+      summary: Gerar IA para Mensagem
+      description: Gera IA para uma mensagem usando o Chat GPT.
+      parameters:
+        - in: query
+          name: message
+          required: true
+          schema:
+            type: string
+          description: Mensagem para interação com o Chat GPT (obrigatório).
+        - in: query
+          name: apiKey
+          required: true
+          schema:
+            type: string
+          description: Chave de API para autenticação (obrigatória).
+      responses:
+        '200':
+          description: IA gerada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GptResponse'
+        '404':
+          description: Erro ao gerar mensagem.
+  /post/campaigns/by-url-id:
+    post:
+      tags:
+        - IA Generativa
+      summary: Postar Campanhas por ID de URL
+      description: Adiciona campanhas ao URL com base no ID da URL.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID da URL para a qual adicionar campanhas (obrigatório).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/GptModel'
+      responses:
+        '200':
+          description: Campanhas adicionadas com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UrlModel'
+        '404':
+          description: URL não encontrada.
+        '400':
+          description: Solicitação inválida.
+components:
+  schemas:
+    GptResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          description: Resposta gerada pela IA.
+        message:
+          type: string
+          description: Mensagem de entrada.
+        timeResponse:
+          type: string
+          format: date-time
+          description: Data e hora da resposta.
+    GptModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identificador único do modelo GPT (opcional).
+        name:
+          type: string
+          description: Nome do modelo GPT (opcional).
+        description:
+          type: string
+          description: Descrição do modelo GPT (opcional).
+        version:
+          type: string
+          description: Versão do modelo GPT (opcional).
+
+    UrlModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Identificador único da URL (obrigatório).
+        url:
+          type: string
+          description: A URL (obrigatória).
+        campaigns:
+          type: array
+          items:
+            $ref: '#/components/schemas/GptModel'  # Referência ao modelo GptModel para as campanhas (opcional).
