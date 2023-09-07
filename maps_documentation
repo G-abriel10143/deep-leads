@@ -1,13 +1,15 @@
-openapi: 3.0.0
+swagger: "2.0"
 info:
+  version: 1.0.0
   title: API de Integração com Google Maps
   description: API para integração com serviços do Google Maps
-  version: 1.0.0
-servers:
-  - url: http://localhost:8080/api/google/maps
+basePath: /api/google/maps
+schemes:
+  - http
 tags:
   - name: Integração com Google Maps
     description: Serviços de integração com o Google Maps
+
 paths:
   /andress:
     get:
@@ -19,26 +21,23 @@ paths:
         - in: query
           name: param
           required: true
-          schema:
-            type: string
+          type: string
           description: Parâmetro para obter informações de endereço.
       responses:
-        '200':
+        200:
           description: Informações de endereço obtidas com sucesso.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GeocodingResponse'
-components:
-  schemas:
-    GeocodingResponse:
-      type: object
-      properties:
-        latitude:
-          type: number
-          format: double
-          description: Latitude da localização.
-        longitude:
-          type: number
-          format: double
-          description: Longitude da localização.
+          schema:
+            $ref: '#/definitions/GeocodingResponse'
+
+definitions:
+  GeocodingResponse:
+    type: object
+    properties:
+      latitude:
+        type: number
+        format: double
+        description: Latitude da localização.
+      longitude:
+        type: number
+        format: double
+        description: Longitude da localização.

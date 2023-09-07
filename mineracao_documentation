@@ -1,17 +1,15 @@
-openapi: 3.0.0
+swagger: "2.0"
 info:
+  version: 1.0.0
   title: API de Mineração de Dados
   description: API para mineração de dados
-  version: 1.0.0
-servers:
-  - url: http://localhost:8080/api/mineracao
-
-# Definição das tags
+basePath: /api/mineracao
+schemes:
+  - http
 tags:
   - name: Mining de dados
     description: Serviços responsáveis pela mineração de dados
 
-# Definição dos endpoints
 paths:
   /get/url/by-user:
     get:
@@ -23,29 +21,24 @@ paths:
         - in: query
           name: id
           required: true
-          schema:
-            type: integer
+          type: integer
           description: ID do usuário.
         - in: query
           name: page
           required: false
-          schema:
-            type: integer
+          type: integer
           description: Número da página.
         - in: query
           name: size
           required: false
-          schema:
-            type: integer
+          type: integer
           description: Tamanho da página.
       responses:
-        '200':
+        200:
           description: URLs obtidas com sucesso.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UrlModel'
-        '404':
+          schema:
+            $ref: '#/definitions/UrlModel'
+        404:
           description: Usuário não encontrado.
 
   /get/leads/by-id:
@@ -58,29 +51,24 @@ paths:
         - in: query
           name: id
           required: true
-          schema:
-            type: integer
+          type: integer
           description: ID do usuário.
         - in: query
           name: page
           required: false
-          schema:
-            type: integer
+          type: integer
           description: Número da página.
         - in: query
           name: size
           required: false
-          schema:
-            type: integer
+          type: integer
           description: Tamanho da página.
       responses:
-        '200':
+        200:
           description: Leads obtidos com sucesso.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LeadsListResponse'
-        '404':
+          schema:
+            $ref: '#/definitions/LeadsListResponse'
+        404:
           description: Usuário não encontrado.
 
   /generate/leads/by-id:
@@ -93,23 +81,20 @@ paths:
         - in: query
           name: id
           required: true
-          schema:
-            type: integer
+          type: integer
           description: ID do usuário.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UrlRequest'
+              $ref: '#/definitions/UrlRequest'
       responses:
-        '200':
+        200:
           description: Leads gerados com sucesso.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LeadsResponse'
-        '404':
+          schema:
+            $ref: '#/definitions/LeadsResponse'
+        404:
           description: Usuário não encontrado.
 
   /getDatas:
@@ -123,91 +108,90 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UrlRequest'
+              $ref: '#/definitions/UrlRequest'
       responses:
-        '200':
+        200:
           description: Dados obtidos com sucesso.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LeadsResponse'
+          schema:
+            $ref: '#/definitions/LeadsResponse'
 
-# Definição dos modelos de dados
-components:
-  schemas:
-    UrlModel:
-      type: object
-      properties:
-        url:
+definitions:
+  UrlModel:
+    type: object
+    properties:
+      url:
+        type: string
+      keys:
+        type: array
+        items:
           type: string
-        keys:
-          type: array
-          items:
-            type: string
-        typeSearch:
+      typeSearch:
+        type: string
+      dataMining:
+        type: string
+        format: date-time
+      leadsModels:
+        type: array
+        items:
+          $ref: '#/definitions/LeadsModel'
+    example:
+      url: "https://example.com"
+      keys: ["key1", "key2"]
+      typeSearch: "type1"
+      dataMining: "2023-09-05T12:00:00Z"
+      leadsModels:
+        - leadId: 1
+          firstName: John
+          lastName: Doe
+          email: john.doe@example.com
+
+  LeadsListResponse:
+    type: object
+    properties:
+      leads:
+        type: array
+        items:
+          $ref: '#/definitions/LeadsResponse'
+    example:
+      leads:
+        - leadId: 1
+          firstName: John
+          lastName: Doe
+          email: john.doe@example.com
+        - leadId: 2
+          firstName: Jane
+          lastName: Smith
+          email: jane.smith@example.com
+
+  LeadsResponse:
+    type: object
+    properties:
+      leadId:
+        type: integer
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+    example:
+      leadId: 1
+      firstName: John
+      lastName: Doe
+      email: john.doe@example.com
+
+  UrlRequest:
+    type: object
+    properties:
+      url:
+        type: string
+      keys:
+        type: array
+        items:
           type: string
-        dataMining:
-          type: string
-          format: date-time
-        leadsModels:
-          type: array
-          items:
-            $ref: '#/components/schemas/LeadsModel'
-      example:
-        url: "https://example.com"
-        keys: ["key1", "key2"]
-        typeSearch: "type1"
-        dataMining: "2023-09-05T12:00:00Z"
-        leadsModels:
-          - leadId: 1
-            firstName: John
-            lastName: Doe
-            email: john.doe@example.com
-    LeadsListResponse:
-      type: object
-      properties:
-        leads:
-          type: array
-          items:
-            $ref: '#/components/schemas/LeadsResponse'
-      example:
-        leads:
-          - leadId: 1
-            firstName: John
-            lastName: Doe
-            email: john.doe@example.com
-          - leadId: 2
-            firstName: Jane
-            lastName: Smith
-            email: jane.smith@example.com
-    LeadsResponse:
-      type: object
-      properties:
-        leadId:
-          type: integer
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-      example:
-        leadId: 1
-        firstName: John
-        lastName: Doe
-        email: john.doe@example.com
-    UrlRequest:
-      type: object
-      properties:
-        url:
-          type: string
-        keys:
-          type: array
-          items:
-            type: string
-        typeSearch:
-          type: string
-      example:
-        url: "https://example.com"
-        keys: ["key1", "key2"]
-        typeSearch: "type1"
+      typeSearch:
+        type: string
+    example:
+      url: "https://example.com"
+      keys: ["key1", "key2"]
+      typeSearch: "type1"
