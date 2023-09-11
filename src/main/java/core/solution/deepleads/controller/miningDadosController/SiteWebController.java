@@ -51,6 +51,9 @@ public class SiteWebController {
 
 
     @GetMapping("get/url/by-user")
+    @Operation(summary = "Realiza a Mineração de dados persistindo diretamente na tabela de dados, ATENÇÃO: Não está atrelada a nenhum usuário.", description = "Retorna uma lista com todos os usuários em paginação")
+    @ApiResponse(responseCode = "200", description = "Usuários encontrados com sucesso!", content = @Content(schema = @Schema(implementation = UrlRequest.class)))
+    @ApiResponse(responseCode = "404", description = "Usuários não encontrados!")
     public ResponseEntity<Page<UrlModel>> getUrlModelByUser(
             @RequestParam Long id,
             @RequestParam(defaultValue = "0") int page,
@@ -78,6 +81,9 @@ public class SiteWebController {
 
 
     @GetMapping("get/leads/by-id")
+    @Operation(summary = "Recupera leads de um usuário por ID.", description = "Retorna uma lista paginada de leads associados a um usuário com base em seu ID.")
+    @ApiResponse(responseCode = "200", description = "Leads encontrados com sucesso!", content = @Content(schema = @Schema(implementation = Page.class)))
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado!")
     public ResponseEntity<Page<LeadsListResponse>> getAllLeadsByUser(
             @RequestParam Long id,
             @RequestParam(defaultValue = "0") int page,

@@ -9,9 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.*;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api")
 @RestController
+@RequestMapping("/api")
+@Api(value = "API Controller", description = "Controlador para operações da API")
 public class EnderecoController {
 
     @Autowired
@@ -21,7 +26,12 @@ public class EnderecoController {
         this.enderecoService = enderecoService;
     }
 
-    @GetMapping("/consultaCEP/{enderecoRequest}")
+    @GetMapping("/consultaCEP/{cep}")
+    @ApiOperation(value = "Consultar CEP", notes = "Este endpoint permite consultar informações de um CEP.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Consulta bem-sucedida"),
+            @ApiResponse(code = 400, message = "Requisição inválida")
+    })
     public ResponseEntity consultaCep(@PathVariable String enderecoRequest) {
         try {
 
