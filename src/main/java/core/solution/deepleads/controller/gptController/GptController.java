@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/generative/ia")
-@Tag(name = "api de IA generativa", description = "Serviços responsaveis pela geração de campanhas inteligentes")
+@Tag(name = "Interação generativa GPT 3.5", description = "Serviços responsaveis pela geração de campanhas inteligentes")
 public class GptController {
     @Autowired
     private GptService gptService;
@@ -47,7 +47,7 @@ public class GptController {
         return gptResponse;
 
     }
-    @Operation(summary = "Cria uma interação com o Chat GPT", description = "Interage com a API do chat GPT")
+    @Operation(summary = "Salva as campanhas geradas pelos usuarios", description = "Requisição POST cadastrando campanhas geradas.")
     @ApiResponse(responseCode = "200", description = "IA gerada com sucesso!!", content = @Content(schema = @Schema(implementation = GptRequest.class)))
     @ApiResponse(responseCode = "404", description = "Erro ao gerar mensagem")
     @PostMapping("/post/campaigns/by-url-id")
