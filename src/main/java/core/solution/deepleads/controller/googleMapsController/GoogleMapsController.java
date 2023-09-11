@@ -1,9 +1,8 @@
-package core.solution.deepleads.controller.GoogleMapsController;
+package core.solution.deepleads.controller.googleMapsController;
 
 import core.solution.deepleads.response.googleMapsResponse.GeocodingResponse;
 import core.solution.deepleads.service.crudService.GoogleMapsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.openqa.selenium.devtools.v115.network.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
