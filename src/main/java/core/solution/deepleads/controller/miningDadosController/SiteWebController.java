@@ -54,28 +54,11 @@ public class SiteWebController {
     @Operation(summary = "Realiza a Mineração de dados persistindo diretamente na tabela de dados, ATENÇÃO: Não está atrelada a nenhum usuário.", description = "Retorna uma lista com todos os usuários em paginação")
     @ApiResponse(responseCode = "200", description = "Usuários encontrados com sucesso!", content = @Content(schema = @Schema(implementation = UrlRequest.class)))
     @ApiResponse(responseCode = "404", description = "Usuários não encontrados!")
-    public ResponseEntity<Page<UrlModel>> getUrlModelByUser(
-            @RequestParam Long id,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        UsuarioModel usuarioModel = usuarioRepository.findById(id).orElse(null);
+    public ResponseEntity<List<UrlModel>> getUrlModelByUser(@RequestParam Long id) {
 
-        if (usuarioModel == null) {
-            return ResponseEntity.notFound().build();
-        }
+        List<UrlModel> urlModels = urlModelRepository.getUrlByUserId(id);
 
-        List<UrlModel> allUrlModels = usuarioModel.getUrlModels();
-
-        int start = page * size;
-        int end = Math.min(start + size, allUrlModels.size());
-
-        List<UrlModel> urlModels = allUrlModels.subList(start, end);
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UrlModel> pageUrlModels = new PageImpl<>(urlModels, pageable, allUrlModels.size());
-
-        return ResponseEntity.ok(pageUrlModels);
+        return ResponseEntity.ok(urlModels);
     }
 
 
@@ -84,37 +67,23 @@ public class SiteWebController {
     @Operation(summary = "Recupera leads de um usuário por ID.", description = "Retorna uma lista paginada de leads associados a um usuário com base em seu ID.")
     @ApiResponse(responseCode = "200", description = "Leads encontrados com sucesso!", content = @Content(schema = @Schema(implementation = Page.class)))
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado!")
-    public ResponseEntity<Page<LeadsListResponse>> getAllLeadsByUser(
-            @RequestParam Long id,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        UsuarioModel usuarioModel = usuarioRepository.findById(id).orElse(null);
+    public ResponseEntity<ArrayList<LeadsListResponse>> getAllLeadsByUser (@RequestParam Long id) {
 
-        if (usuarioModel == null) {
-            return ResponseEntity.notFound().build();
-        }
+        UsuarioModel usuarioModel  = usuarioRepository.findById(id).orElse(null);
 
-        List<LeadsModel> leadsModels = new ArrayList<>();
+        ArrayList<LeadsModel> leadsModels = new ArrayList<>();
+        ArrayList<LeadsListResponse> leadsListResponses = new ArrayList<>();
+
         for (UrlModel urlModel : usuarioModel.getUrlModels()) {
             leadsModels.addAll(urlModel.getLeadsModels());
         }
-
-        int start = page * size;
-        int end = Math.min(start + size, leadsModels.size());
-
-        List<LeadsListResponse> leadsListResponses = new ArrayList<>();
-        for (int i = start; i < end; i++) {
-            LeadsModel leadsModel = leadsModels.get(i);
+        for (LeadsModel leadsModel : leadsModels) {
             LeadsListResponse leadsListResponse = new LeadsListResponse(leadsModel);
             leadsListResponses.add(leadsListResponse);
         }
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<LeadsListResponse> pageLeadsListResponses = new PageImpl<>(leadsListResponses, pageable, leadsModels.size());
-
-        return ResponseEntity.ok(pageLeadsListResponses);
+        return ResponseEntity.ok(leadsListResponses);
     }
+
 
     @Operation(summary = "Realiza a Mineracao de dados persistindo diretamente na tabela de dados, ATENÇÃO: Não está atrlada a nenhum usuario.", description = "Retorna uma lista com todos os usuarios em paginação")
     @ApiResponse(responseCode = "200", description = "Usuarios encontrados com sucesso!", content = @Content(schema = @Schema(implementation = UrlRequest.class)))

@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "0d4a76f0-5cac-415d-b815-4766c3ee0f29",
+		"_postman_id": "83860afa-940e-4d70-b2b6-3be11fb5db10",
 		"name": "Mining-dados-API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "22009911"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -490,6 +489,87 @@
 									"value": "4",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Whatsapp Api",
+			"item": [
+				{
+					"name": "POST - Enviar Mensagem - Texto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"apikey\" : \"a4952719-c976-4905-bc56-88521ef4d99e\",\n\"phone_number\" : \"5511957818539\",\n\"contact_phone_number\" : \"5511930905518\",\n\"message_custom_id\" : \"1\",\n\"message_type\" : \"text\",\n\"message_body\" : \"*Teste mensagem API DeepLeads* \\n se voce recebeu esta mensagem, desconsidere!\",\n\"check_status\" : \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://app.whatsgw.com.br/api/WhatsGw/Send",
+							"protocol": "https",
+							"host": [
+								"app",
+								"whatsgw",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"WhatsGw",
+								"Send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Verificar numeros",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Campanha",
+			"item": [
+				{
+					"name": "POST - Enviar Campanha",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dataInicio\": \"2023-09-17T08:00:00Z\",\n    \"dataFim\": \"2023-09-18T08:00:00Z\",\n    \"message\": \"*Teste mensagem API DeepLeads* \\n se voce recebeu esta mensagem, desconsidere!\",\n    \"messageType\": \"text\",\n    \"phoneInitial\": \"5511957818539\",\n    \"leads\": [\n        {\n            \"name\": \"Marco Automobilismo\",\n            \"phone\": \"5511970277484\",\n            \"state\": \"São Paulo\",\n            \"category\": \"Cliente\"\n        },\n        {\n            \"name\": \"cabeleleila Mirah\",\n            \"phone\": \"5511956877422\",\n            \"state\": \"Rio de Janeiro\",\n            \"category\": \"Prospect\"\n        }\n    ]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/whatsapp/send/message",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"whatsapp",
+								"send",
+								"message"
 							]
 						}
 					},
